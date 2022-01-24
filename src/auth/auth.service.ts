@@ -46,7 +46,7 @@ export class AuthService {
   }: AuthCredentialsDto): Promise<AuthCredentialsResponseDto> {
     try {
       const user = await this.userModel.findOne({ email });
-      if (user && bcrypt.hashSync(password, 10) === user.password) {
+      if (user && bcrypt.compareSync(password, user.password)) {
         return await this.renewToken(user);
       } else {
         throw new BadRequestException(

@@ -6,7 +6,7 @@ export type UserDocument = User & Document;
 @Schema()
 export class User {
   @ApiProperty({
-    description: 'enail that identifies the user.',
+    description: 'email that identifies the user.',
     example: 'mayrasho',
     type: String
   })

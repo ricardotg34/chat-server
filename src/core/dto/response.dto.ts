@@ -1,5 +1,17 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 export class ResponseDto<T = any> {
+  @ApiProperty({
+    description: 'Status code',
+    example: 200,
+    type: Number
+  })
   statusCode: number;
+  @ApiProperty({
+    description: 'Status code',
+    example: 'Example message',
+    type: String
+  })
   message: string;
   data: T;
 

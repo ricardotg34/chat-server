@@ -5,7 +5,8 @@ import {
   UsePipes,
   ValidationPipe,
   Get,
-  UseGuards
+  UseGuards,
+  HttpCode
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -13,7 +14,8 @@ import {
   ApiCreatedResponse,
   ApiBadRequestResponse,
   ApiInternalServerErrorResponse,
-  ApiOkResponse
+  ApiOkResponse,
+  ApiBearerAuth
 } from '@nestjs/swagger';
 import { ResponseDtoSchema } from 'src/core/api-schemas/response-dto.schema';
 import { GetUser } from 'src/core/decorators/get-user.decorator';
@@ -27,7 +29,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { User, UserDocument } from './schemas/User.schema';
 
-@Controller('auth')
+@Controller('users')
 @ApiTags('Auth and Users')
 @ApiExtraModels(ResponseDto, AuthCredentialsResponseDto, User)
 export class AuthController {
@@ -46,6 +48,7 @@ export class AuthController {
   }
 
   @Post('sign-in')
+  @HttpCode(200)
   @UsePipes(ValidationPipe)
   @ApiOkResponse({
     description: 'User successfuly authenticated.',
@@ -66,6 +69,7 @@ export class AuthController {
   }
 
   @Get('renew-token')
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   async renew(
     @GetUser() user: UserDocument

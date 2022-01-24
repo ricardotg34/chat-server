@@ -24,7 +24,7 @@ export class AuthCredentialsDto {
 export class AuthCredentialsResponseDto {
   @ApiProperty({
     description: 'Access token used to authenticate the user',
-    example: 'access token',
+    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
     type: String
   })
   accessToken: string;
