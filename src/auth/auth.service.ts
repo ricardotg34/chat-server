@@ -1,7 +1,9 @@
 import {
   BadRequestException,
   Injectable,
-  InternalServerErrorException
+  InternalServerErrorException,
+  NotFoundException,
+  UnauthorizedException
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
@@ -40,6 +42,22 @@ export class AuthService {
     }
   }
 
+  async toggleConnectionState(userId: string, connectionState: boolean) {
+    try {
+      const user = await this.userModel.findById(userId);
+      if (!user)
+        throw new NotFoundException(
+          `The User with id ${userId} does not exist.`
+        );
+      user.isOnline = connectionState;
+      user.save();
+      return user;
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      else throw new InternalServerErrorException();
+    }
+  }
+
   async validatePassword({
     email,
     password
@@ -60,8 +78,19 @@ export class AuthService {
   }
 
   async renewToken(user: UserDocument): Promise<AuthCredentialsResponseDto> {
-    const payload = { user: user.email };
+    const payload = { user: user.email, id: user.id };
     const accessToken = this.jwtService.sign(payload);
     return { accessToken };
+  }
+
+  async verifyToken(token: string) {
+    try {
+      const payload = this.jwtService.verify(token);
+      const user = await this.userModel.findById(payload.id);
+      if (!user) throw new UnauthorizedException();
+      return user;
+    } catch {
+      return undefined;
+    }
   }
 }

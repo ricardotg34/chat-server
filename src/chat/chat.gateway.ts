@@ -1,18 +1,38 @@
+import { UseGuards } from '@nestjs/common';
 import {
   WebSocketGateway,
   OnGatewayConnection,
-  OnGatewayDisconnect
+  OnGatewayDisconnect,
+  SubscribeMessage,
+  MessageBody
 } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
+import { WSJwtAuthGuard } from 'src/auth/guards/ws-jwt-auth.guard';
 import { ChatService } from './chat.service';
 
-@WebSocketGateway()
+@WebSocketGateway({
+  namespace: 'chat'
+})
+@UseGuards(WSJwtAuthGuard)
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  constructor(private readonly chatService: ChatService) {}
-  handleConnection(client: Socket) {
-    console.log('Cliente conectado');
+  constructor(private chatService: ChatService) {}
+
+  async handleConnection(client: Socket) {
+    this.chatService.toggleUserConnectionState(
+      client.handshake.headers.authorization,
+      true
+    );
   }
-  handleDisconnect(client: Socket) {
-    console.log('Cliente desconectado');
+
+  async handleDisconnect(client: Socket) {
+    this.chatService.toggleUserConnectionState(
+      client.handshake.headers.authorization,
+      false
+    );
+  }
+
+  @SubscribeMessage('events')
+  handleEvent(@MessageBody() data: string): string {
+    return data;
   }
 }

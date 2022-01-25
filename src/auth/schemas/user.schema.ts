@@ -23,6 +23,14 @@ export class User {
   })
   @Prop()
   name: string;
+
+  @ApiProperty({
+    description: 'Online user status.',
+    example: true,
+    type: Boolean
+  })
+  @Prop({ default: false })
+  isOnline: boolean;
 }
 
 const UserSchema = SchemaFactory.createForClass(User);

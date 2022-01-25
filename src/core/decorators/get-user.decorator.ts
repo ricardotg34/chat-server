@@ -7,3 +7,10 @@ export const GetUser = createParamDecorator(
     return req.user;
   }
 );
+
+export const WSGetUser = createParamDecorator(
+  (data, ctx: ExecutionContext): User => {
+    const req = ctx.switchToWs().getClient().handshake;
+    return req.user;
+  }
+);
