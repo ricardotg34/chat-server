@@ -42,6 +42,17 @@ export class AuthService {
     }
   }
 
+  async list(user: UserDocument): Promise<User[]> {
+    try {
+      const users = await this.userModel
+        .find({ id: { $ne: user.id } })
+        .sort('-online');
+      return users;
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+  }
+
   async toggleConnectionState(userId: string, connectionState: boolean) {
     try {
       const user = await this.userModel.findById(userId);

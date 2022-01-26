@@ -29,6 +29,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { User, UserDocument } from './schemas/User.schema';
 
+// yJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiZ2lzc0BleGFtcGxlLmNvbSIsImlkIjoiNjFlYjdkNWMwNjc3ZDExNzk5OTFmNzJkIiwiaWF0IjoxNjQzMjA0NDI2LCJleHAiOjE2NDMyOTA4MjZ9.I3AulS0op0N1vS53PNiZTiHQ2Rd_dFjaVCZLrhlQOnk
+
 @Controller('users')
 @ApiTags('Auth and Users')
 @ApiExtraModels(ResponseDto, AuthCredentialsResponseDto, User)
@@ -45,6 +47,17 @@ export class AuthController {
   async create(@Body() user: CreateUserDto): Promise<ResponseDto> {
     await this.authService.create(user);
     return new ResponseDto(201, 'The user has been created.');
+  }
+
+  @Get()
+  @ApiCreatedResponse({
+    description: 'Users have been successfuly retreived.'
+  })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error.' })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  async list(@GetUser() user: UserDocument): Promise<ResponseDto<User[]>> {
+    return new ResponseDto(200, await this.authService.list(user));
   }
 
   @Post('sign-in')

@@ -3,7 +3,18 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Document } from 'mongoose';
 
 export type UserDocument = User & Document;
-@Schema()
+@Schema({
+  toJSON: {
+    transform: (
+      doc: Record<string, unknown>,
+      ret: Record<string, unknown>
+    ): any => {
+      const { _id, ...rest } = ret;
+      delete rest.password;
+      return { id: _id, ...rest };
+    }
+  }
+})
 export class User {
   @ApiProperty({
     description: 'email that identifies the user.',
