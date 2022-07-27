@@ -11,8 +11,7 @@ import { ChatModule } from './chat/chat.module';
       rootPath: join(__dirname, '..', 'public')
     }),
     MongooseModule.forRoot(
-      'mongodb+srv://ricardotg34:kirisutegomen@clustertg.n0miq.mongodb.net/chat',
-      { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }
+      'mongodb+srv://chat_user:09100209@clustertg.n0miq.mongodb.net/chat?retryWrites=true&w=majority'
     ),
     AuthModule,
     ChatModule
