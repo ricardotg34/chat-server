@@ -1,8 +1,13 @@
-import { ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
 import { IS_PUBLIC_KEY } from 'src/core/decorators/is-public.decorator';
+import { User } from '../schemas/user.schema';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
@@ -22,11 +27,13 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     }
     return super.canActivate(context);
   }
-  // // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  // handleRequest(err: unknown, user: User): any {
-  //   if (err || !user) {
-  //     throw err || new UnauthorizedException('You are not allowed to see this info');
-  //   }
-  //   return user;
-  // }
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  handleRequest(err: unknown, user: User): any {
+    if (err || !user) {
+      throw (
+        err || new UnauthorizedException('You are not allowed to see this info')
+      );
+    }
+    return user;
+  }
 }
