@@ -28,4 +28,11 @@ export class AuthCredentialsResponseDto {
     type: String
   })
   accessToken: string;
+
+  @ApiProperty({
+    description: 'Username of the authenticated user',
+    example: 'Username',
+    type: String
+  })
+  username: string;
 }

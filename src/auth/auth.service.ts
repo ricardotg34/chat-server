@@ -11,11 +11,11 @@ import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 
 import { CreateUserDto } from './dto/create-user.dto';
-import { User, UserDocument } from './schemas/User.schema';
 import {
   AuthCredentialsDto,
   AuthCredentialsResponseDto
 } from './dto/auth-credentialsdto';
+import { User, UserDocument } from './schemas/user.schema';
 
 @Injectable()
 export class AuthService {
@@ -45,7 +45,7 @@ export class AuthService {
   async list(user: UserDocument): Promise<User[]> {
     try {
       const users = await this.userModel
-        .find({ _id: { $ne: user.id } })
+        .find({ _id: { $ne: user?.id } })
         .sort('-online');
       return users;
     } catch (error) {
@@ -91,7 +91,7 @@ export class AuthService {
   async renewToken(user: UserDocument): Promise<AuthCredentialsResponseDto> {
     const payload = { user: user.email, id: user.id };
     const accessToken = this.jwtService.sign(payload);
-    return { accessToken };
+    return { accessToken, username: user.name };
   }
 
   async verifyToken(token: string) {

@@ -8,8 +8,7 @@ export class ChatService {
   async toggleUserConnectionState(authHeader: string, isOnline: boolean) {
     const token = authHeader.replace('Bearer ', '');
     const user = await this.authService.verifyToken(token);
-    if (user) {
-      this.authService.toggleConnectionState(user.id, isOnline);
-    }
+    this.authService.toggleConnectionState(user.id, isOnline);
+    return user;
   }
 }
