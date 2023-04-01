@@ -45,7 +45,7 @@ export class AuthService {
   async list(user: UserDocument): Promise<User[]> {
     try {
       const users = await this.userModel
-        .find({ id: { $ne: user.id } })
+        .find({ _id: { $ne: user.id } })
         .sort('-online');
       return users;
     } catch (error) {
