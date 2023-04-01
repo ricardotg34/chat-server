@@ -27,7 +27,7 @@ import {
 } from './dto/auth-credentialsdto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { User, UserDocument } from './schemas/User.schema';
+import { User, UserDocument } from './schemas/user.schema';
 
 // yJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiZ2lzc0BleGFtcGxlLmNvbSIsImlkIjoiNjFlYjdkNWMwNjc3ZDExNzk5OTFmNzJkIiwiaWF0IjoxNjQzMjA0NDI2LCJleHAiOjE2NDMyOTA4MjZ9.I3AulS0op0N1vS53PNiZTiHQ2Rd_dFjaVCZLrhlQOnk
 
