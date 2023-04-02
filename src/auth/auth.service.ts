@@ -89,7 +89,7 @@ export class AuthService {
   }
 
   async renewToken(user: UserDocument): Promise<AuthCredentialsResponseDto> {
-    const payload = { user: user.email, id: user.id };
+    const payload = { email: user.email, id: user.id, name: user.name };
     const accessToken = this.jwtService.sign(payload);
     return { accessToken, username: user.name };
   }
