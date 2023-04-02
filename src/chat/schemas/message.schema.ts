@@ -1,9 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { Document, Schema as MongooseSchema } from 'mongoose';
+import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
 import { User } from 'src/auth/schemas/user.schema';
 
-export type MessageDocument = Message & Document;
+export type MessageDocument = HydratedDocument<Message>;
 
 @Schema({
   toJSON: {
