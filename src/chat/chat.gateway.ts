@@ -9,8 +9,10 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { WSJwtAuthGuard } from 'src/auth/guards/ws-jwt-auth.guard';
+import { WSGetUser } from 'src/core/decorators/get-user.decorator';
 import { ChatService } from './chat.service';
 import { GetMessageDTO } from './dto/get-message.dto';
+import { UserDocument } from 'src/auth/schemas/user.schema';
 
 @WebSocketGateway({
   namespace: 'chat'
@@ -43,7 +45,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('personal-message')
-  getPersonalMessage(@MessageBody() data: GetMessageDTO) {
+  async getPersonalMessage(
+    @WSGetUser() user: UserDocument,
+    @MessageBody() data: GetMessageDTO
+  ) {
+    await this.chatService.saveMessage({ ...data, from: user.id });
     this.server.to(data.to).emit('personal-message', data);
   }
 }
